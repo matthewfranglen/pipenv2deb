@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+
+from src.settings import read_settings
+from src.debian import create_debian_package
+
+
+def main():
+    settings = read_settings()
+    print(create_debian_package(settings))
+
+
+if __name__ == "__main__":
+    main()
