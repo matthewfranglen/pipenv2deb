@@ -10,15 +10,37 @@ def read_settings():
         description=
         'Create a debian package out of a pipenv enabled python project'
     )
-    parser.add_argument('--script', action='append')
-    parser.add_argument('--name')
-    parser.add_argument('--version')
-    parser.add_argument('pipfile')
-    parser.add_argument('setup', required=False)
+    parser.add_argument(
+        '--script',
+        action='append',
+        help='Script for the tool. Can be read from the setup.py file'
+    )
+    parser.add_argument(
+        '--name', help='Name of the tool. Can be read from the setup.py file'
+    )
+    parser.add_argument(
+        '--version',
+        help='Version of the tool. Can be read from setup.py file'
+    )
+    parser.add_argument(
+        '--project',
+        help=
+        'Root folder for project. Defaults to the folder containing the Pipfile'
+    )
+    parser.add_argument(
+        '--python-version', default='3.6.5', help='Python version to install'
+    )
+    parser.add_argument('pipfile', help='Path to the Pipfile for the project')
+    parser.add_argument(
+        'setup',
+        required=False,
+        help=
+        'Optional path to the setup.py file. Will read settings from this file'
+    )
     args = parser.parse_args()
 
     pipfile = abspath(args.pipfile)
-    project = dirname(pipfile)
+    project = args.project or dirname(pipfile)
 
     if args.setup:
         with open(args.setup, 'r') as handle:
@@ -44,10 +66,13 @@ def read_settings():
         name=name,
         version=version,
         scripts=scripts,
+        pipfile=pipfile,
+        python_version=args.python_version,
         architecture=architecture,
     )
 
 
 Settings = namedtuple(
-    'Settings', ['project', 'name', 'version', 'scripts', 'architecture']
+    'Settings',
+    ['project', 'name', 'version', 'scripts', 'pipfile', 'python_version', 'architecture']
 )
