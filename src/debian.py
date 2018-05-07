@@ -18,7 +18,6 @@ class Directory:
 
     def __init__(self):
         self.path = mkdtemp()
-        print('using {path}...'.format(path=self.path))
         self.pyenv_root = join(self.path, 'pyenv')
         self.project_root = join(self.path, 'project')
         self.debian_root = join(self.path, 'DEBIAN')
@@ -44,6 +43,10 @@ class Directory:
 
     def clean(self):
         print('cleaning...')
+        if not self.path:
+            raise ValueError('Clean invoked on cleaned directory')
+        rmtree(self.path)
+        self.path = None
 
     def copy_project(self, settings):
         print('copying project...')
@@ -64,13 +67,13 @@ class Directory:
         print('installing dependencies...')
         env = os.environ.copy()
         env['PYENV_ROOT'] = self.pyenv_root
-        env['PIPENV_VENV_IN_PROJECT'] = True
+        env['PIPENV_VENV_IN_PROJECT'] = '1'
         os.chdir(self.project_root)
         sh.pipenv('install', _env=env)
 
     def configure_dpkg(self, settings):
         print('configuring debian metadata...')
-        template = Template(pkg_resources.resource_string(__name__, 'templates/control.jinja'))
+        template = Template(pkg_resources.resource_string(__name__, '../templates/control.jinja'))
         content = template.render(**settings)
         with open(join(self.path, 'DEBIAN', 'control'), 'w') as handle:
             handle.write(content)
