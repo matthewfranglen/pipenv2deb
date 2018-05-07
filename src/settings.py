@@ -33,7 +33,7 @@ def read_settings():
     parser.add_argument('pipfile', help='Path to the Pipfile for the project')
     parser.add_argument(
         'setup',
-        required=False,
+        nargs='?',
         help=
         'Optional path to the setup.py file. Will read settings from this file'
     )
@@ -41,6 +41,9 @@ def read_settings():
 
     pipfile = abspath(args.pipfile)
     project = args.project or dirname(pipfile)
+    name = None
+    version = None
+    scripts = None
 
     if args.setup:
         with open(args.setup, 'r') as handle:
