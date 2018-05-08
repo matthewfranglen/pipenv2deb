@@ -1,7 +1,7 @@
 import os
 from os import mkdir
 from os.path import join
-from shutil import copy, copytree, rmtree
+from shutil import copytree, rmtree
 from tempfile import mkdtemp
 
 import pkg_resources
@@ -34,7 +34,7 @@ class Directory:
         self.copy_project(settings)
         self.install_pyenv()
         self.install_python(settings)
-        self.install_dependencies(settings)
+        self.install_dependencies()
         self.configure_dpkg(settings)
 
     def create(self):
@@ -63,7 +63,7 @@ class Directory:
         pyenv = sh.Command(join(self.path, 'pyenv', 'bin', 'pyenv'))
         pyenv.install(settings.python_version, _env=env)
 
-    def install_dependencies(self, settings):
+    def install_dependencies(self):
         print('installing dependencies...')
         env = os.environ.copy()
         env['PYENV_ROOT'] = self.pyenv_root

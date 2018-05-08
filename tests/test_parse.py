@@ -1,5 +1,3 @@
-import ast
-
 from src.parse import read_setup_details
 
 
@@ -75,5 +73,5 @@ setup(name='bottle',
     name, version, scripts = read_setup_details(source)
 
     assert name == 'bottle'
-    assert version == None
+    assert version is None
     assert scripts == ['bottle.py']
