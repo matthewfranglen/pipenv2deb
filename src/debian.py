@@ -10,13 +10,14 @@ from jinja2 import Template
 
 
 def create_debian_package(settings):
-    with Directory() as directory:
-        directory.prepare(settings)
+    with PackageBuildDirectory(settings) as directory:
+        directory.prepare()
         return directory.create()
 
 
-class Directory:
-    def __init__(self):
+class PackageBuildDirectory:
+    def __init__(self, settings):
+        self.settings = settings
         self.path = mkdtemp()
         self.pyenv_root = join(self.path, 'pyenv')
         self.project_root = join(self.path, 'project')
@@ -29,13 +30,13 @@ class Directory:
     def __exit__(self, exception_type, value, traceback):
         self.clean()
 
-    def prepare(self, settings):
+    def prepare(self):
         print('preparing...')
-        self.copy_project(settings)
+        self.copy_project()
         self.install_pyenv()
-        self.install_python(settings)
+        self.install_python()
         self.install_dependencies()
-        self.configure_dpkg(settings)
+        self.configure_dpkg()
 
     def create(self):
         print('creating...')
@@ -48,20 +49,20 @@ class Directory:
         rmtree(self.path)
         self.path = None
 
-    def copy_project(self, settings):
+    def copy_project(self):
         print('copying project...')
-        copytree(settings.project, self.project_root)
+        copytree(self.settings.project, self.project_root)
 
     def install_pyenv(self):
         print('installing pyenv...')
         sh.git.clone('https://github.com/pyenv/pyenv.git', self.pyenv_root)
 
-    def install_python(self, settings):
+    def install_python(self):
         print('installing python...')
         env = os.environ.copy()
         env['PYENV_ROOT'] = self.pyenv_root
         pyenv = sh.Command(join(self.path, 'pyenv', 'bin', 'pyenv'))
-        pyenv.install(settings.python_version, _env=env)
+        pyenv.install(self.settings.python_version, _env=env)
 
     def install_dependencies(self):
         print('installing dependencies...')
@@ -71,13 +72,13 @@ class Directory:
         os.chdir(self.project_root)
         sh.pipenv('install', _env=env)
 
-    def configure_dpkg(self, settings):
+    def configure_dpkg(self):
         print('configuring debian metadata...')
         template = Template(
             pkg_resources.resource_string(
                 __name__, '../templates/control.jinja'
             )
         )
-        content = template.render(**settings)
+        content = template.render(**self.settings)
         with open(join(self.path, 'DEBIAN', 'control'), 'w') as handle:
             handle.write(content)
