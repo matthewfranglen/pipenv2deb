@@ -1,5 +1,6 @@
-from src.parse import read_setup_details
 import ast
+
+from src.parse import read_setup_details
 
 
 def test_no_scripts():

@@ -1,11 +1,12 @@
-from tempfile import mkdtemp
 import os
-import pkg_resources
 from os import mkdir
 from os.path import join
 from shutil import copy, copytree, rmtree
-from jinja2 import Template
+from tempfile import mkdtemp
+
+import pkg_resources
 import sh
+from jinja2 import Template
 
 
 def create_debian_package(settings):
@@ -15,7 +16,6 @@ def create_debian_package(settings):
 
 
 class Directory:
-
     def __init__(self):
         self.path = mkdtemp()
         self.pyenv_root = join(self.path, 'pyenv')
@@ -73,7 +73,11 @@ class Directory:
 
     def configure_dpkg(self, settings):
         print('configuring debian metadata...')
-        template = Template(pkg_resources.resource_string(__name__, '../templates/control.jinja'))
+        template = Template(
+            pkg_resources.resource_string(
+                __name__, '../templates/control.jinja'
+            )
+        )
         content = template.render(**settings)
         with open(join(self.path, 'DEBIAN', 'control'), 'w') as handle:
             handle.write(content)

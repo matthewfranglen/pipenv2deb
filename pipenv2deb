@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from src.settings import read_settings
 from src.debian import create_debian_package
+from src.settings import read_settings
 
 
 def main():

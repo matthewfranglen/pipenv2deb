@@ -1,7 +1,9 @@
 import argparse
 from collections import namedtuple
 from os.path import abspath, basename, dirname
+
 from sh import dpkg  # pylint: disable=no-name-in-module
+
 from .parse import read_setup_details
 
 
@@ -76,6 +78,8 @@ def read_settings():
 
 
 Settings = namedtuple(
-    'Settings',
-    ['project', 'name', 'version', 'scripts', 'pipfile', 'python_version', 'architecture']
+    'Settings', [
+        'project', 'name', 'version', 'scripts', 'pipfile', 'python_version',
+        'architecture'
+    ]
 )
