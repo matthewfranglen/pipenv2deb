@@ -48,6 +48,7 @@ class PackageBuildDirectory:
     def create(self):
         print('creating...')
         sh.dpkg_deb('--build', self.path, 'build.deb')
+        return 'build.deb'
 
     def clean(self):
         print('cleaning...')
@@ -72,8 +73,7 @@ class PackageBuildDirectory:
 
     def install_dependencies(self):
         print('installing dependencies...')
-        os.chdir(self.project_root)
-        sh.pipenv('install', _env=self.env)
+        sh.pipenv('install', _env=self.env, _cwd=self.project_root)
 
     def configure_dpkg(self):
         print('configuring debian metadata...')
@@ -84,4 +84,3 @@ class PackageBuildDirectory:
         content = template.render(**self.settings._asdict())
         control_file = self.debian_root / 'control'
         control_file.write_text(content)
-        print(content)
