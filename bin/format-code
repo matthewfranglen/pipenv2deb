@@ -9,4 +9,4 @@ readonly PROJECT_FOLDER="$(dirname "${BIN_FOLDER}")"
 cd "${PROJECT_FOLDER}"
 
 pipenv run isort --recursive src tests pipenv2deb
-pipenv run yapf --recursive src tests pipenv2deb
+pipenv run yapf --recursive --in-place src tests pipenv2deb
