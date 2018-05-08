@@ -1,6 +1,8 @@
 Pipenv To DEB
 =============
 
+[![Build Status](https://travis-ci.org/matthewfranglen/pipenv2deb.svg?branch=master)](https://travis-ci.org/matthewfranglen/pipenv2deb)
+
 This tool can convert a pipenv python project into a debian package.
 The debian package will install the source code and virtual environment into the `/usr/local/src` folder.
 Any python scripts in the project can be invoked through auto generated shims.
@@ -29,11 +31,6 @@ pipenv2deb Pipfile --script foo.py --script bar.py --name foo-bar
 
 This produces a debian package that contains the source code and shims for the `foo.py` and `bar.py` scripts.
 It will use the `foo-bar` name as the project name.
-
-Requirements
-------------
-
-This uses docker to build the environment before packaging it.
 
 Details
 -------
