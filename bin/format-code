@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -euo pipefail
+
+readonly COMMAND="$(readlink -f "${0}")"
+readonly BIN_FOLDER="$(dirname "${COMMAND}")"
+readonly PROJECT_FOLDER="$(dirname "${BIN_FOLDER}")"
+
+cd "${PROJECT_FOLDER}"
+
+pipenv run isort --recursive src tests pipenv2deb
+pipenv run yapf --recursive src tests pipenv2deb
