@@ -1,5 +1,5 @@
-Pipenv To DEB
-=============
+Pipenv To Debian Package
+========================
 
 [![Build Status](https://travis-ci.org/matthewfranglen/pipenv2deb.svg?branch=master)](https://travis-ci.org/matthewfranglen/pipenv2deb)
 
