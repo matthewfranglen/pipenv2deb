@@ -17,14 +17,15 @@ def create_debian_package(settings):
 
 class PackageBuildDirectory:
     def __init__(self, settings):
+        self.path = self.pyenv_root = self.project_root = self.debian_root = None
         self.settings = settings
+
+    def __enter__(self):
         self.path = mkdtemp()
         self.pyenv_root = join(self.path, 'pyenv')
         self.project_root = join(self.path, 'project')
         self.debian_root = join(self.path, 'DEBIAN')
         mkdir(self.debian_root)
-
-    def __enter__(self):
         return self
 
     def __exit__(self, exception_type, value, traceback):
@@ -75,9 +76,7 @@ class PackageBuildDirectory:
     def configure_dpkg(self):
         print('configuring debian metadata...')
         template = Template(
-            pkg_resources.resource_string(
-                __name__, '../templates/control.jinja'
-            )
+            pkg_resources.resource_string(__name__, 'templates/control.jinja')
         )
         content = template.render(**self.settings)
         with open(join(self.path, 'DEBIAN', 'control'), 'w') as handle:
