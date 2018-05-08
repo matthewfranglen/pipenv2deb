@@ -77,9 +77,11 @@ class PackageBuildDirectory:
 
     def configure_dpkg(self):
         print('configuring debian metadata...')
-        template = Template(
-            pkg_resources.resource_string(__name__, 'templates/control.jinja')
-        )
-        content = template.render(**self.settings)
+        template_content = pkg_resources.resource_string(
+            __name__, 'templates/control.jinja'
+        ).decode('utf-8')
+        template = Template(template_content)
+        content = template.render(**self.settings._asdict())
         control_file = self.debian_root / 'control'
         control_file.write_text(content)
+        print(content)

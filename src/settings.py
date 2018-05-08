@@ -64,22 +64,31 @@ def read_settings():
         version = '0.0.0'
     if not scripts:
         scripts = []
-    architecture = dpkg('--print-architecture')
+    architecture = dpkg('--print-architecture').strip()
+    description = 'unknown'
+    maintainer = 'unknown'
 
     return Settings(
         project=project,
+        python_version=args.python_version,
+        scripts=scripts,
         name=name,
         version=version,
-        scripts=scripts,
-        pipfile=pipfile,
-        python_version=args.python_version,
         architecture=architecture,
+        description=description,
+        maintainer=maintainer,
     )
 
 
 Settings = namedtuple(
     'Settings', [
-        'project', 'name', 'version', 'scripts', 'pipfile', 'python_version',
-        'architecture'
+        'project',
+        'python_version',
+        'scripts',
+        'name',
+        'version',
+        'architecture',
+        'description',
+        'maintainer',
     ]
 )
