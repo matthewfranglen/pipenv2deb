@@ -11,12 +11,13 @@ isort = "*"
 pylint = "*"
 yapf = "*"
 pytest = "*"
+coverage = "*"
+tox = "*"
 
 
 [packages]
 
-sh = "*"
-"jinja2" = "*"
+"e1839a8" = {path = ".", editable = true}
 
 
 [requires]
